@@ -1,3 +1,4 @@
+import 'package:expenses_tracker/widgets/chart.dart';
 import 'package:expenses_tracker/widgets/new_transaction.dart';
 
 import './models/transcation.dart';
@@ -11,6 +12,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ExpensePage(),
+      title: "Expenses Tracker",
+      theme: ThemeData(
+        primarySwatch: Colors.brown,
+        accentColor: Colors.green,
+        fontFamily: "Mont",
+        textTheme: TextTheme(
+          title: TextStyle(
+            fontFamily: "Mont",
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            title: TextStyle(
+              fontFamily: "Lato",
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -22,10 +45,10 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   List<Transaction> _userTransactions = [
-    Transaction(
-        itemName: "Groceries", itemPrice: 12.50, itemDate: DateTime.now()),
-    Transaction(itemName: "Watch", itemPrice: 100.50, itemDate: DateTime.now()),
-    Transaction(itemName: "Jacket", itemPrice: 42.50, itemDate: DateTime.now()),
+//    Transaction(
+//        itemName: "Groceries", itemPrice: 12.50, itemDate: DateTime.now()),
+//    Transaction(itemName: "Watch", itemPrice: 100.50, itemDate: DateTime.now()),
+//    Transaction(itemName: "Jacket", itemPrice: 42.50, itemDate: DateTime.now()),
   ];
 
   void _addNewTransaction(String txName, double txPrice) {
@@ -65,13 +88,7 @@ class _ExpensePageState extends State<ExpensePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Text("Chart"),
-                elevation: 5,
-              ),
-            ),
+            Chart(),
             TransactionList(_userTransactions),
           ],
         ),
