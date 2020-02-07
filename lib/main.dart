@@ -51,9 +51,15 @@ class _ExpensePageState extends State<ExpensePage> {
 //    Transaction(itemName: "Jacket", itemPrice: 42.50, itemDate: DateTime.now()),
   ];
 
-  void _addNewTransaction(String txName, double txPrice) {
-    final newTx = Transaction(
-        itemName: txName, itemPrice: txPrice, itemDate: DateTime.now());
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.itemDate.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
+  void _addNewTransaction(String txName, double txPrice, DateTime txDate) {
+    final newTx =
+        Transaction(itemName: txName, itemPrice: txPrice, itemDate: txDate);
     setState(() {
       _userTransactions.add(newTx);
     });
@@ -88,7 +94,7 @@ class _ExpensePageState extends State<ExpensePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Chart(),
+            Chart(_recentTransactions),
             TransactionList(_userTransactions),
           ],
         ),
