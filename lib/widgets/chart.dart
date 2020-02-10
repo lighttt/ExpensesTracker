@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Chart extends StatelessWidget {
-  List<Transaction> transactions = [];
+  List<Transaction> recentTransactions = [];
 
-  Chart(this.transactions);
+  Chart(this.recentTransactions);
 
   List<Map<String, Object>> get groupedExpenses {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
       double totalSum = 0.0;
-      for (int i = 0; i < transactions.length; i++) {
-        if (transactions[i].itemDate.day == weekDay.day &&
-            transactions[i].itemDate.month == weekDay.month &&
-            transactions[i].itemDate.year == weekDay.year) {
-          totalSum += transactions[i].itemPrice;
+      for (int i = 0; i < recentTransactions.length; i++) {
+        if (recentTransactions[i].itemDate.day == weekDay.day &&
+            recentTransactions[i].itemDate.month == weekDay.month &&
+            recentTransactions[i].itemDate.year == weekDay.year) {
+          totalSum += recentTransactions[i].itemPrice;
         }
       }
       return {

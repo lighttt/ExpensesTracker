@@ -34,47 +34,66 @@ class TransactionList extends StatelessWidget {
               itemCount: transactions.length,
               itemBuilder: (ctx, index) {
                 return Card(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          '\$' + transactions[index].itemPrice.toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold,
+                    elevation: 6,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: FittedBox(
+                            child: Text(
+                              '\$' + transactions[index].itemPrice.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).accentColor,
-                            width: 2,
-                          ),
-                        ),
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        padding: EdgeInsets.all(5.0),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            transactions[index].itemName,
-                            style: Theme.of(context).textTheme.title,
-                          ),
-                          Text(
-                            DateFormat.yMMMEd()
-                                .format(transactions[index].itemDate),
-                            style:
-                                TextStyle(fontSize: 15.0, color: Colors.grey),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                );
+                    ));
               },
             ),
     );
   }
 }
+
+//Row(
+//children: <Widget>[
+//Container(
+//child: Text(
+//'\$' + transactions[index].itemPrice.toString(),
+//style: TextStyle(
+//color: Theme.of(context).accentColor,
+//fontSize: 25.0,
+//fontWeight: FontWeight.bold,
+//),
+//),
+//decoration: BoxDecoration(
+//border: Border.all(
+//color: Theme.of(context).accentColor,
+//width: 2,
+//),
+//),
+//margin:
+//EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+//padding: EdgeInsets.all(5.0),
+//),
+//Column(
+//crossAxisAlignment: CrossAxisAlignment.start,
+//children: <Widget>[
+//Text(
+//transactions[index].itemName,
+//style: Theme.of(context).textTheme.title,
+//),
+//Text(
+//DateFormat.yMMMEd()
+//.format(transactions[index].itemDate),
+//style:
+//TextStyle(fontSize: 15.0, color: Colors.grey),
+//),
+//],
+//)
+//],
+//),

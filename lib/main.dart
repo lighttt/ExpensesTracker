@@ -44,19 +44,17 @@ class ExpensePage extends StatefulWidget {
 }
 
 class _ExpensePageState extends State<ExpensePage> {
-  List<Transaction> _userTransactions = [
-//    Transaction(
-//        itemName: "Groceries", itemPrice: 12.50, itemDate: DateTime.now()),
-//    Transaction(itemName: "Watch", itemPrice: 100.50, itemDate: DateTime.now()),
-//    Transaction(itemName: "Jacket", itemPrice: 42.50, itemDate: DateTime.now()),
-  ];
+  // this is the total transactions done by user
+  List<Transaction> _userTransactions = [];
 
+  //this gives recent transactions for chart
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
       return tx.itemDate.isAfter(DateTime.now().subtract(Duration(days: 7)));
     }).toList();
   }
 
+  // this function helps you add transaction
   void _addNewTransaction(String txName, double txPrice, DateTime txDate) {
     final newTx =
         Transaction(itemName: txName, itemPrice: txPrice, itemDate: txDate);
@@ -65,6 +63,7 @@ class _ExpensePageState extends State<ExpensePage> {
     });
   }
 
+  // --------------- this function shows a bottom sheet --------------------
   void _showAddTransaction(BuildContext bCtx) {
     showModalBottomSheet(
         context: bCtx,
