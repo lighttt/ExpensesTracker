@@ -1,14 +1,15 @@
 import 'package:expenses_tracker/widgets/chart.dart';
 import 'package:expenses_tracker/widgets/new_transaction.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:io';
 import './models/transcation.dart';
 import 'package:expenses_tracker/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   /*
-        ------------- This method ensures only to use portrait mode ------------------
+       0 ------------- This method ensures only to use portrait mode ------------------
    */
 //  WidgetsFlutterBinding.ensureInitialized();
 //  SystemChrome.setPreferredOrientations(
@@ -98,81 +99,110 @@ class _ExpensePageState extends State<ExpensePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandScape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
 
-    final appBar = AppBar(
-      title: Text("Expenses Tracker"),
-      centerTitle: true,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _showAddTransaction(context);
-          },
-        ),
-      ],
-    );
+    final isLandScape = mediaQuery.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text("Expenses Tracker"),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(
+                    CupertinoIcons.add,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    _showAddTransaction(context);
+                  },
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text("Expenses Tracker"),
+            centerTitle: true,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _showAddTransaction(context);
+                },
+              ),
+            ],
+          );
 
     final txListWidget = Container(
-        height: (MediaQuery.of(context).size.height * 0.7) -
+        height: (mediaQuery.size.height * 0.7) -
             appBar.preferredSize.height -
-            MediaQuery.of(context).padding.top,
+            mediaQuery.padding.top,
         child: TransactionList(_userTransactions, _deleteTransaction));
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            if (isLandScape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Show Chart",
-                  ),
-                  Switch(
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            if (!isLandScape)
-              Container(
-                  height: (MediaQuery.of(context).size.height * 0.3) -
-                      appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top,
-                  child: Chart(_recentTransactions)),
-            if (!isLandScape) txListWidget,
-            if (isLandScape)
-              _showChart
-                  ? Container(
-                      height: (MediaQuery.of(context).size.height * 0.7) -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top,
-                      child: Chart(_recentTransactions))
-                  : txListWidget
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          _showAddTransaction(context);
-        },
+    final pageBody = SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          if (isLandScape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Show Chart",
+                ),
+                Switch.adaptive(
+                  value: _showChart,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+          if (!isLandScape)
+            Container(
+                height: (mediaQuery.size.height * 0.3) -
+                    appBar.preferredSize.height -
+                    mediaQuery.padding.top,
+                child: Chart(_recentTransactions)),
+          if (!isLandScape) txListWidget,
+          if (isLandScape)
+            _showChart
+                ? Container(
+                    height: (mediaQuery.size.height * 0.7) -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top,
+                    child: Chart(_recentTransactions))
+                : txListWidget
+        ],
       ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _showAddTransaction(context);
+                    },
+                  ),
+          );
   }
 }

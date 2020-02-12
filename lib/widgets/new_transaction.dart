@@ -1,5 +1,8 @@
+import 'package:expenses_tracker/widgets/adpative_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -26,16 +29,27 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   void _pickDate() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2020),
-            lastDate: DateTime.now())
-        .then((pickedDate) {
-      setState(() {
-        _selectedDateTime = pickedDate;
-      });
-    });
+    Platform.isIOS
+        ? CupertinoDatePicker(
+            initialDateTime: DateTime.now(),
+            maximumDate: DateTime.now(),
+            minimumDate: DateTime(2020),
+            onDateTimeChanged: (pickedDate) {
+              setState(() {
+                _selectedDateTime = pickedDate;
+              });
+            },
+          )
+        : showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime.now())
+            .then((pickedDate) {
+            setState(() {
+              _selectedDateTime = pickedDate;
+            });
+          });
   }
 
   @override
@@ -78,15 +92,9 @@ class _NewTransactionState extends State<NewTransaction> {
                           fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
-                  FlatButton(
-                    child: Text(
-                      "Choose a date",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    onPressed: _pickDate,
+                  AdaptiveButton(
+                    text: "Choose a date",
+                    onPress: _pickDate,
                   )
                 ],
               ),
